@@ -1,19 +1,20 @@
 import Head from 'next/head';
 import * as React from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount } from '@web3modal/react';
 import { Account, Connect } from '../components';
 import { useIsMounted } from '../hooks';
 import { Container, Heading } from '@chakra-ui/react';
 
 function Home() {
     const isMounted = useIsMounted();
-    const { isConnected } = useAccount();
+    const { account: { isConnected }} = useAccount();
 
     return (
         <div>
             <Head>
-                <title>React Solidity Scaffold</title>
-                <meta name="description" content="Scaffold to start a web3 project with solidity, javascript and React on the frontend" />
+                <title>OpenBeats</title>
+                {/* TODO: this description */}
+                <meta name="description" content="" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
@@ -24,7 +25,7 @@ function Home() {
                             isMounted && isConnected
                                 ? (<> <Account /> </>)
                                 : <Heading as='h1' size='l' padding='8px'>
-                                    React and Solidity Scaffold
+                                    OpenBeats
                                 </Heading>
                         }
                         <Connect />

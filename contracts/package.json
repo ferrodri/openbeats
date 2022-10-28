@@ -1,25 +1,20 @@
 {
-    "name": "solidity-scaffold",
+    "name": "openbeats-smart-contracts",
     "version": "1.0.0",
-    "description": "Scaffold to start a web3 project with solidity",
+    "description": "",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ferrodri/react-solidity-scaffold.git"
+        "url": "git+https://github.com/ferrodri/openbeats.git"
     },
     "scripts": {
         "test": "npx hardhat test"
     },
-    "keywords": [
-        "scaffold",
-        "hardhat",
-        "solidity"
-    ],
     "author": "Fernando Rodriguez Hervias",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/ferrodri/react-solidity-scaffold/issues"
+        "url": "https://github.com/ferrodri/openbeats/issues"
     },
-    "homepage": "https://github.com/ferrodri/react-solidity-scaffold#readme",
+    "homepage": "https://github.com/ferrodri/openbeats#readme",
     "devDependencies": {
         "@nomicfoundation/hardhat-network-helpers": "1.0.6",
         "@nomicfoundation/hardhat-toolbox": "^1.0.2",
