@@ -1,0 +1,30 @@
+{
+    "name": "solidity-scaffold",
+    "version": "1.0.0",
+    "description": "Scaffold to start a web3 project with solidity",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ferrodri/react-solidity-scaffold.git"
+    },
+    "scripts": {
+        "test": "npx hardhat test"
+    },
+    "keywords": [
+        "scaffold",
+        "hardhat",
+        "solidity"
+    ],
+    "author": "Fernando Rodriguez Hervias",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/ferrodri/react-solidity-scaffold/issues"
+    },
+    "homepage": "https://github.com/ferrodri/react-solidity-scaffold#readme",
+    "devDependencies": {
+        "@nomicfoundation/hardhat-network-helpers": "1.0.6",
+        "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+        "eslint": "8.26.0",
+        "hardhat": "2.12.0",
+        "hardhat-contract-sizer": "2.6.1"
+    }
+}
