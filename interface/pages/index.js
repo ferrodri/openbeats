@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import * as React from 'react';
 import { useAccount } from '@web3modal/react';
-import { Account, Connect } from '../components';
+import { Account, Connect, PremiumPlans } from '../components';
 import { useIsMounted } from '../hooks';
 import { Container, Heading } from '@chakra-ui/react';
 
@@ -31,6 +31,7 @@ function Home() {
                         <Connect />
                     </>
                 </Container>
+                <PremiumPlans/>
             </main>
         </div>
     );
