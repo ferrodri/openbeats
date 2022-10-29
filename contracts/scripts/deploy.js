@@ -4,10 +4,37 @@
 // You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
-const hre = require('hardhat');
+const IERC20_SOURCE = '@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20';
+const USDC_IMPERSONATE_ADDRESS = '0xfB68C1eEc4F7930c8774Ede7fB0d6E0d037a6aFB';
+const USDC_ADDRESS = '0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83';
+const USDC_DECIMALS = 6;
 
 async function main() {
-    // TODO: deploy contracts here
+    // eslint-disable-next-line no-undef
+    const [{ address }] = await ethers.getSigners();
+
+
+    // Impersonate account to get some tokens
+    // eslint-disable-next-line no-undef
+    await network.provider.request({
+        method: 'hardhat_impersonateAccount',
+        params: [USDC_IMPERSONATE_ADDRESS],
+    });
+
+    // eslint-disable-next-line no-undef
+    const signer = await ethers.provider.getSigner(USDC_IMPERSONATE_ADDRESS);
+    // eslint-disable-next-line no-undef
+    let USDCContract = await hre.ethers.getContractAt(IERC20_SOURCE, USDC_ADDRESS, signer);
+    USDCContract = USDCContract.connect(signer);
+
+    // eslint-disable-next-line no-undef
+    await USDCContract.approve(signer._address, ethers.utils.parseUnits('100.00', USDC_DECIMALS));
+    // eslint-disable-next-line no-undef
+    await USDCContract.transferFrom(signer._address, address, ethers.utils.parseUnits('100.00', USDC_DECIMALS));
+
+    let balance = await USDCContract.balanceOf(address);
+    // eslint-disable-next-line no-undef
+    console.log('balance: ', ethers.utils.formatUnits(balance, USDC_DECIMALS), address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
