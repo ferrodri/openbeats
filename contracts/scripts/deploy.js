@@ -13,7 +13,6 @@ async function main() {
     // eslint-disable-next-line no-undef
     const [{ address }] = await ethers.getSigners();
 
-
     // Impersonate account to get some tokens
     // eslint-disable-next-line no-undef
     await network.provider.request({
@@ -35,6 +34,15 @@ async function main() {
     let balance = await USDCContract.balanceOf(address);
     // eslint-disable-next-line no-undef
     console.log('balance: ', ethers.utils.formatUnits(balance, USDC_DECIMALS), address);
+
+    // eslint-disable-next-line no-undef
+    const SongFactory = await ethers.getContractFactory('Song');
+
+    const Song = await SongFactory.deploy();
+
+    await Song.deployed();
+
+    console.log('Song deployed to:', Song.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

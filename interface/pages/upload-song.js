@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import * as React from 'react';
 import { useAccount } from '@web3modal/react';
-import { Account, Balance, Connect, PremiumPlans } from '../components';
+import { Account, Connect, UploadSong } from '../components';
 import { useIsMounted } from '../hooks';
 import { Container, Heading } from '@chakra-ui/react';
 
@@ -23,7 +23,12 @@ function Home() {
                     <>
                         {
                             isMounted && isConnected
-                                ? (<> <Account address={address} /> <Balance address={address}/></>)
+                                ? (
+                                    <Container>
+                                        <Account address={address} />
+                                        <UploadSong address={address} />
+                                    </Container >
+                                )
                                 : <>
                                     <Heading as='h1' size='l' padding='8px'>
                                         OpenBeats
@@ -33,8 +38,6 @@ function Home() {
                         }
                     </>
                 </Container>
-                {/* TODO: Premium plans cannot be seen if not logged */}
-                <PremiumPlans />
             </main>
         </div>
     );
