@@ -201,7 +201,7 @@ export function UploadSong({ address }) {
                     )}
                 </Formik>
             </>}
-            {transactionHash && <FractionSong />}
+            {transactionHash && <FractionSong/>}
         </Container>
     );
 };

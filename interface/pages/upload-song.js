@@ -5,7 +5,7 @@ import { Account, Connect, UploadSong } from '../components';
 import { useIsMounted } from '../hooks';
 import { Container, Heading } from '@chakra-ui/react';
 
-function Home() {
+function UploadSongPage() {
     const isMounted = useIsMounted();
     const { account: { isConnected, address } } = useAccount();
 
@@ -26,7 +26,7 @@ function Home() {
                                 ? (
                                     <Container>
                                         <Account address={address} />
-                                        <UploadSong address={address} />
+                                        <UploadSong address={address}/>
                                     </Container >
                                 )
                                 : <>
@@ -43,4 +43,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default UploadSongPage;
