@@ -42,7 +42,7 @@ async function main() {
 
     await Song.deployed();
 
-    console.log('Song deployed to:', Song.address);
+    console.log('Song contract deployed to:', Song.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -40,7 +40,7 @@ const pinFileToIPFS = async (data) => {
 const pinJSONToIPFS = async (data) => {
     const url = 'https://api.pinata.cloud/pinning/pinJSONToIPFS';
     try {
-        const resp = await axios.post(url, JSON.stringify(data), {
+        const resp = await axios.post(url, data, {
             headers: {
                 pinata_api_key: '6a09485934c38d2eaa22',
                 pinata_secret_api_key:

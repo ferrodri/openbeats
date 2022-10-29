@@ -56,7 +56,7 @@ export function FractionSong() {
             }
             {isLoading && <span>Loading your song ...</span>}
             {/* TODO frh render song here with title, artist and so on */}
-            {tokenId && <>
+            {tokenId && !tokensNumber && <>
                 <Heading as='h1' size='xl' textAlign='center'>
                     How many tokens should your song have?
                 </Heading>
