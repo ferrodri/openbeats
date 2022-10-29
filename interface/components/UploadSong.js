@@ -13,6 +13,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import SongABI from '../../contracts/artifacts/contracts/Song.sol/Song.json';
 import { SONG_CONTRACT_ADDRESS } from '../shared/constants';
+import { FractionSong } from './FractionSong';
 
 const SongSchema = Yup.object().shape({
     title: Yup.string().required('Required'),
@@ -21,7 +22,6 @@ const SongSchema = Yup.object().shape({
 });
 
 const pinFileToIPFS = async (data) => {
-    console.log('data: ', data);
     const url = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
     try {
         const resp = await axios.post(url, data, {
@@ -31,7 +31,6 @@ const pinFileToIPFS = async (data) => {
                     'c66ee0e1a50991957a320035d5037dfa0b59b03317c16659e152724234e1ea2b',
             },
         });
-        console.log(resp);
         return resp.data.IpfsHash;
     } catch (error) {
         console.log('error: ', error);
@@ -39,7 +38,6 @@ const pinFileToIPFS = async (data) => {
 };
 
 const pinJSONToIPFS = async (data) => {
-    console.log('data: ', data);
     const url = 'https://api.pinata.cloud/pinning/pinJSONToIPFS';
     try {
         const resp = await axios.post(url, JSON.stringify(data), {
@@ -49,23 +47,24 @@ const pinJSONToIPFS = async (data) => {
                     'c66ee0e1a50991957a320035d5037dfa0b59b03317c16659e152724234e1ea2b',
             },
         });
-        console.log(resp);
         return resp.data.IpfsHash;
     } catch (error) {
         console.log('error: ', error);
     }
 };
 
-export function UploadSong({address}) {
+export function UploadSong({ address }) {
     const toast = useToast();
     const [cid, setCid] = useState(null);
+    const [transactionHash, setTransactionHash] = useState(null);
 
     const { write } = useContractWrite({
         mode: 'recklesslyUnprepared',
         address: SONG_CONTRACT_ADDRESS,
         abi: SongABI.abi,
         functionName: 'mintToken',
-        onSuccess() {
+        onSuccess(data) {
+            setTransactionHash(data.hash);
             toast({
                 title: 'Song uploaded correctly!',
                 status: 'success',
@@ -93,113 +92,116 @@ export function UploadSong({address}) {
 
     return (
         <Container>
-            <Heading as='h1' size='xl' textAlign='center'>
-                Upload your new song
-            </Heading>
-            <Formik
-                initialValues={{
-                    title: '',
-                    artist: '',
-                    album: '',
-                    songFile: ''
-                }}
-                validationSchema={SongSchema}
-                onSubmit={(values, actions) => {
-                    const { title, artist, album } = values;
-                    pinJSONToIPFS({
-                        title, artist, album, cid
-                    }).then(hash => {
-                        write({
-                            recklesslySetUnpreparedArgs: [
-                                address,
-                                hash
-                            ]
+            {!transactionHash && <>
+                <Heading as='h1' size='xl' textAlign='center'>
+                    Upload your new song
+                </Heading>
+                <Formik
+                    initialValues={{
+                        title: '',
+                        artist: '',
+                        album: '',
+                        songFile: ''
+                    }}
+                    validationSchema={SongSchema}
+                    onSubmit={(values, actions) => {
+                        const { title, artist, album } = values;
+                        pinJSONToIPFS({
+                            title, artist, album, cid
+                        }).then(hash => {
+                            write({
+                                recklesslySetUnpreparedArgs: [
+                                    address,
+                                    hash
+                                ]
+                            });
+
                         });
+                        actions.setSubmitting(false);
+                    }}
+                >
+                    {({ errors, touched }) => (
+                        <Form >
+                            <Container display='flex' flexDirection='column'>
 
-                    });
-                    actions.setSubmitting(false);
-                }}
-            >
-                {({ errors, touched }) => (
-                    <Form >
-                        <Container display='flex' flexDirection='column'>
+                                <Field name="title">
+                                    {({ field }) => (
+                                        <FormControl mt={4}>
+                                            <FormLabel>Song Title</FormLabel>
+                                            <Input
+                                                {...field}
+                                                placeholder='Song Title'
+                                            />
+                                            {
+                                                errors.title
+                                                && touched.title
+                                                && <span>{errors.title}</span>
+                                            }
+                                        </FormControl>
+                                    )}
+                                </Field>
 
-                            <Field name="title">
-                                {({ field }) => (
-                                    <FormControl mt={4}>
-                                        <FormLabel>Song Title</FormLabel>
-                                        <Input
-                                            {...field}
-                                            placeholder='Song Title'
-                                        />
-                                        {
-                                            errors.title
-                                            && touched.title
-                                            && <span>{errors.title}</span>
-                                        }
-                                    </FormControl>
-                                )}
-                            </Field>
-
-                            {/* TODO: IF ENOUGH TIME USE ENS */}
-                            <Field name="artist">
-                                {({ field }) => (
-                                    <FormControl mt={4}>
-                                        <FormLabel>Artist</FormLabel>
-                                        <Input
-                                            {...field}
-                                            placeholder='Artist'
-                                        />
-                                        {
-                                            errors.artist
-                                            && touched.artist
-                                            && <span>{errors.artist}</span>
-                                        }
-                                    </FormControl>
-                                )}
-                            </Field>
+                                {/* TODO: IF ENOUGH TIME USE ENS */}
+                                <Field name="artist">
+                                    {({ field }) => (
+                                        <FormControl mt={4}>
+                                            <FormLabel>Artist</FormLabel>
+                                            <Input
+                                                {...field}
+                                                placeholder='Artist'
+                                            />
+                                            {
+                                                errors.artist
+                                                && touched.artist
+                                                && <span>{errors.artist}</span>
+                                            }
+                                        </FormControl>
+                                    )}
+                                </Field>
 
 
-                            <Field name="album">
-                                {({ field }) => (
-                                    <FormControl mt={4}>
-                                        <FormLabel>Album</FormLabel>
-                                        <Input
-                                            {...field}
-                                            placeholder='Album'
-                                        />
-                                        {
-                                            errors.album
-                                            && touched.album
-                                            && <span>{errors.album}</span>
-                                        }
-                                    </FormControl>
-                                )}
-                            </Field>
-                            <input id="file" name="file" type="file" onChange={(event) => {
-                                let data = new FormData();
-                                data.append('file', event.target.files[0]);
-                                data.append('pinataOptions', '{"cidVersion": 1}');
-                                pinFileToIPFS(data).then(hash => setCid(`https://ipfs.io/ipfs/${hash}`));
-                            }} />
-                            <button
-                                disabled={touched.title && touched.artist && touched.album && !cid ? true : false}
-                                className='primary-button'
-                                type="submit"
-                                style={{
-                                    marginTop: '16px',
-                                    cursor:
-                                        touched.title && touched.artist && touched.album
-                                            && !cid ? 'progress' : 'auto'
-                                }}
-                            >
-                                Submit
-                            </button>
-                        </Container>
+                                <Field name="album">
+                                    {({ field }) => (
+                                        <FormControl mt={4}>
+                                            <FormLabel>Album</FormLabel>
+                                            <Input
+                                                {...field}
+                                                placeholder='Album'
+                                            />
+                                            {
+                                                errors.album
+                                                && touched.album
+                                                && <span>{errors.album}</span>
+                                            }
+                                        </FormControl>
+                                    )}
+                                </Field>
+                                <input id="file" name="file" type="file" onChange={(event) => {
+                                    let data = new FormData();
+                                    data.append('file', event.target.files[0]);
+                                    data.append('pinataOptions', '{"cidVersion": 1}');
+                                    pinFileToIPFS(data).then(hash => setCid(`https://ipfs.io/ipfs/${hash}`));
+                                }} />
+                                <button
+                                    disabled={touched.title && touched.artist && touched.album && !cid ? true : false}
+                                    className='primary-button'
+                                    type="submit"
+                                    style={{
+                                        marginTop: '16px',
+                                        cursor:
+                                            touched.title && touched.artist && touched.album
+                                                && !cid ? 'progress' : 'pointer'
+                                    }}
+                                >
+                                    Submit
+                                </button>
+                            </Container>
 
-                    </Form>
-                )}
-            </Formik>
+                        </Form>
+                    )}
+                </Formik>
+            </>}
+            {transactionHash && <FractionSong />}
         </Container>
     );
 };

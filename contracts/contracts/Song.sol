@@ -23,4 +23,12 @@ contract Song is ERC721URIStorage {
 
         return id;
     }
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 tokenId
+    ) public override {
+        super.safeTransferFrom(from, to, tokenId, '');
+    }
 }

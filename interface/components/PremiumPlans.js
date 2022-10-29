@@ -1,6 +1,7 @@
 import { Container, Grid, GridItem, Heading, Text } from '@chakra-ui/react';
 import { Plan } from './Plan';
 
+// TODO: frh -> change plans to equal rates
 const plans = [
     {
         heading: 'Low',
