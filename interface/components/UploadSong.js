@@ -58,8 +58,7 @@ const pinJSONToIPFS = async (data) => {
 export function UploadSong({ address }) {
     const toast = useToast();
     const [cid, setCid] = useState(null);
-    {/* TODO: frh -> change this */ }
-    const [transactionHash, setTransactionHash] = useState(true);
+    const [transactionHash, setTransactionHash] = useState(null);
 
     const { write } = useContractWrite({
         mode: 'recklesslyUnprepared',

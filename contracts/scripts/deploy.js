@@ -53,6 +53,15 @@ async function main() {
     await Songs.deployed();
 
     console.log('Songs contract deployed to:', Songs.address);
+
+    // eslint-disable-next-line no-undef
+    const SwapFactory = await ethers.getContractFactory('Swap');
+
+    const Swap = await SwapFactory.deploy();
+
+    await Swap.deployed();
+
+    console.log('Swap contract deployed to:', Swap.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

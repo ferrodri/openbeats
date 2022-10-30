@@ -1,9 +1,35 @@
-import { Container, Grid, GridItem, Heading, Text } from '@chakra-ui/react';
+import {
+    Container,
+    FormControl,
+    FormLabel,
+    Input,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    Text,
+    useDisclosure,
+    useToast
+} from '@chakra-ui/react';
+import { Field, Form, Formik } from 'formik';
+import SwapABI from '../../contracts/artifacts/contracts/Swap.sol/Swap.json';
 import SongsABI from '../../contracts/artifacts/contracts/Songs.sol/Songs.json';
-import { SONGS_CONTRACT_ADDRESS, IPFS_BASE_URL } from '../shared/constants';
-import { useContractRead } from 'wagmi';
+import { SONGS_CONTRACT_ADDRESS, SWAP_CONTRACT_ADDRESS, IPFS_BASE_URL, USDC_DECIMALS } from '../shared/constants';
+import { useContractRead, usePrepareContractWrite, useContractWrite } from 'wagmi';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import * as Yup from 'yup';
+import { ethers, BigNumber } from 'ethers';
+import { parseDecimal } from '../shared/utils';
+
+
+const SaleSchema = Yup.object().shape({
+    price: Yup.number().required().positive().integer(),
+    tokensNumber: Yup.number().required().positive().integer()
+});
 
 const getIPFS = async (url) => {
     try {
@@ -15,7 +41,9 @@ const getIPFS = async (url) => {
 };
 
 export function SongCard({ song }) {
-    const { tokenId, numberOfTokens } = song;
+    const { tokenId, numberOfTokens: totalSupply } = song;
+    const { isOpen, onClose, onOpen } = useDisclosure();
+    const toast = useToast();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [hashMetadata, setHashMetadata] = useState(null);
@@ -23,7 +51,49 @@ export function SongCard({ song }) {
     const [artist, setArtist] = useState('');
     const [album, setAlbum] = useState('');
     const [songUrl, setSongUrl] = useState('');
+    const [salePrice, setSalePrice] = useState(0);
+    const [saleQuantity, setSaleQuantity] = useState(0);
 
+    const { config } = usePrepareContractWrite({
+        address: SONGS_CONTRACT_ADDRESS,
+        abi: SongsABI.abi,
+        functionName: 'setApprovalForAll',
+        args: [SWAP_CONTRACT_ADDRESS, true]
+    });
+    const { write: setApprovalForAll } = useContractWrite(config);
+
+    const { write } = useContractWrite({
+        mode: 'recklesslyUnprepared',
+        address: SWAP_CONTRACT_ADDRESS,
+        abi: SwapABI.abi,
+        functionName: 'startSale',
+        onSuccess(bool) {
+            toast({
+                title: 'Song tokens listed correctly!',
+                status: 'success',
+                duration: 9000,
+                containerStyle: {
+                    maxHeight: '500px'
+                },
+                isClosable: true
+            });
+        },
+        onError(error) {
+            toast({
+                title: 'Error listing your song',
+                description: (error.message ? error.message : JSON.stringify(error)),
+                status: 'error',
+                duration: 9000,
+                containerStyle: {
+                    maxHeight: '500px'
+                },
+                isClosable: true
+            });
+        }
+    });
+
+
+    // Read uri
     useContractRead({
         address: SONGS_CONTRACT_ADDRESS,
         abi: SongsABI.abi,
@@ -39,6 +109,28 @@ export function SongCard({ song }) {
         },
         watch: true
     });
+
+
+    useContractRead({
+        address: SWAP_CONTRACT_ADDRESS,
+        abi: SwapABI.abi,
+        functionName: 'getSalePriceQuantity',
+        args: [tokenId],
+        onSuccess(data) {
+            const _salePrice = data[0].toNumber();
+            const _saleQuantity = data[1].toNumber();
+            if (_salePrice && _saleQuantity) {
+                setSalePrice(_salePrice);
+                setSaleQuantity(_saleQuantity);
+            }
+            setIsLoading(false);
+        },
+        onError(error) {
+            setError(error);
+        },
+        watch: true
+    });
+
 
     useEffect(() => {
 
@@ -83,8 +175,102 @@ export function SongCard({ song }) {
                     Song album: {album}
                 </Text>
                 <Text>
-                    Tokens total supply: {numberOfTokens}
+                    Tokens total supply: {totalSupply}
                 </Text>
+                {salePrice && saleQuantity && <>
+                    <Text>
+                        Sale Price: {parseDecimal(salePrice)} USDC
+                    </Text>
+                    <Text>
+                        Sale quantity: {saleQuantity}
+                    </Text>
+                </>}
+                <button className='primary-song' onClick={onOpen} >
+                    Sell song
+                </button>
+                <Modal isOpen={isOpen} onClose={onClose} >
+                    <ModalOverlay
+                        bg='#211f24'
+                        backdropFilter='auto'
+                        backdropInvert='80%'
+                        backdropBlur='2px'
+                    />
+                    <ModalContent bg='#211f24' border='white 1px solid'>
+                        <ModalHeader>Sale a part of your song</ModalHeader>
+                        <ModalCloseButton />
+                        <Formik
+                            initialValues={{
+                                price: null,
+                                tokensNumber: null
+                            }}
+                            validationSchema={SaleSchema}
+                            onSubmit={(values, actions) => {
+                                const {
+                                    price,
+                                    tokensNumber
+                                } = values;
+                                setApprovalForAll();
+                                write({
+                                    recklesslySetUnpreparedArgs: [
+                                        BigNumber.from(tokenId),
+                                        ethers.utils.parseUnits(price, USDC_DECIMALS),
+                                        BigNumber.from(tokensNumber),
+                                    ]
+                                });
+
+                                actions.setSubmitting(false);
+                                onClose();
+                            }}
+                        >
+                            {({ errors, touched }) => (
+                                <Form>
+                                    <ModalBody pb={6}>
+
+                                        <Field name="price">
+                                            {({ field }) => (
+                                                <FormControl mt={4}>
+                                                    <FormLabel>Price (USDC)</FormLabel>
+                                                    <Input
+                                                        {...field}
+                                                        placeholder='Price'
+                                                    />
+                                                    {
+                                                        errors.price
+                                                        && touched.price
+                                                        && <span>{errors.price}</span>
+                                                    }
+                                                </FormControl>
+                                            )}
+                                        </Field>
+
+
+                                        <Field name="tokensNumber">
+                                            {({ field }) => (
+                                                <FormControl>
+                                                    <FormLabel>Number of tokens</FormLabel>
+                                                    <Input
+                                                        {...field}
+                                                        placeholder='Number of tokens'
+                                                    />
+                                                    {
+                                                        errors.tokensNumber
+                                                        && touched.tokensNumber
+                                                        && <span>{errors.tokensNumber}</span>
+                                                    }
+                                                </FormControl>
+                                            )}
+                                        </Field>
+
+                                    </ModalBody>
+
+                                    <ModalFooter>
+                                        <button type="submit">Submit</button>
+                                    </ModalFooter>
+                                </Form>
+                            )}
+                        </Formik>
+                    </ModalContent>
+                </Modal>
             </Container>
 
         </>
