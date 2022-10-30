@@ -1,6 +1,6 @@
 import { Container, Grid, GridItem, Heading, Text } from '@chakra-ui/react';
-import SongABI from '../../contracts/artifacts/contracts/Song.sol/Song.json';
-import { SONG_CONTRACT_ADDRESS, IPFS_BASE_URL } from '../shared/constants';
+import SongsABI from '../../contracts/artifacts/contracts/Songs.sol/Songs.json';
+import { SONGS_CONTRACT_ADDRESS, IPFS_BASE_URL } from '../shared/constants';
 import { useContractRead } from 'wagmi';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -14,7 +14,8 @@ const getIPFS = async (url) => {
     }
 };
 
-export function SongCard({ tokenId }) {
+export function SongCard({ song }) {
+    const { tokenId, numberOfTokens } = song;
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [hashMetadata, setHashMetadata] = useState(null);
@@ -24,9 +25,9 @@ export function SongCard({ tokenId }) {
     const [songUrl, setSongUrl] = useState('');
 
     useContractRead({
-        address: SONG_CONTRACT_ADDRESS,
-        abi: SongABI.abi,
-        functionName: 'tokenURI',
+        address: SONGS_CONTRACT_ADDRESS,
+        abi: SongsABI.abi,
+        functionName: 'uri',
         args: [tokenId],
         onSuccess(data) {
             setHashMetadata(data);
@@ -62,7 +63,16 @@ export function SongCard({ tokenId }) {
                 </span>
             }
             {isLoading && <span>Loading your song ...</span>}
-            <Container >
+            <Container
+                w='100%'
+                h='100%'
+                border='1px solid #2d2d2d'
+                margin='12px'
+                padding='24px'
+                borderRadius='12px'
+                display='flex'
+                flexDirection='column'
+            >
                 <Text>
                     Song title: {title}
                 </Text>
@@ -71,6 +81,9 @@ export function SongCard({ tokenId }) {
                 </Text>
                 <Text>
                     Song album: {album}
+                </Text>
+                <Text>
+                    Tokens total supply: {numberOfTokens}
                 </Text>
             </Container>
 

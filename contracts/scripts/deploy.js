@@ -35,6 +35,7 @@ async function main() {
     // eslint-disable-next-line no-undef
     console.log('balance: ', ethers.utils.formatUnits(balance, USDC_DECIMALS), address);
 
+    // TODO: frh -> remove this
     // eslint-disable-next-line no-undef
     const SongFactory = await ethers.getContractFactory('Song');
 
@@ -43,6 +44,15 @@ async function main() {
     await Song.deployed();
 
     console.log('Song contract deployed to:', Song.address);
+
+    // eslint-disable-next-line no-undef
+    const SongsFactory = await ethers.getContractFactory('Songs');
+
+    const Songs = await SongsFactory.deploy();
+
+    await Songs.deployed();
+
+    console.log('Songs contract deployed to:', Songs.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

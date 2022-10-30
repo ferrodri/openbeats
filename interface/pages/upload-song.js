@@ -19,25 +19,27 @@ function UploadSongPage() {
             </Head>
 
             <main>
-                <Container display='flex' justifyContent='space-around' marginTop='16px' minWidth='600px'>
-                    <>
-                        {
-                            isMounted && isConnected
-                                ? (
-                                    <Container>
-                                        <Account address={address} />
-                                        <UploadSong address={address}/>
-                                    </Container >
-                                )
-                                : <>
-                                    <Heading as='h1' size='l' padding='8px'>
-                                        OpenBeats
-                                    </Heading>
-                                    <Connect />
-                                </>
-                        }
-                    </>
-                </Container>
+                <Account address={address} />
+                {
+                    isMounted && isConnected
+                        ? (
+                            <Container
+                                display='flex'
+                                flexDirection='column'
+                                minWidth='1000px'
+                                margin='0'
+                                paddingRight='45px'
+                            >
+                                <UploadSong address={address} />
+                            </Container >
+                        )
+                        : <>
+                            <Heading as='h1' size='l' padding='8px'>
+                                OpenBeats
+                            </Heading>
+                            <Connect />
+                        </>
+                }
             </main>
         </div>
     );

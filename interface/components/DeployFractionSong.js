@@ -1,3 +1,4 @@
+// TODO: frh -> remove this file
 import { useEffect, useState } from 'react';
 import { useProvider } from 'wagmi';
 import { ethers, BigNumber } from 'ethers';
@@ -7,7 +8,6 @@ import { SONG_CONTRACT_ADDRESS } from '../shared/constants';
 import { useAccount } from '@web3modal/react';
 import { Container, Grid, GridItem, Heading, useToast } from '@chakra-ui/react';
 import { SongCard } from './SongCard';
-import { TokensBalance } from './TokensBalance';
 
 export function DeployFractionSong({ tokensNumber, tokenId }) {
     const toast = useToast();
