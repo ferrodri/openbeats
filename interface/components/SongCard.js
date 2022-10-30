@@ -53,6 +53,7 @@ export function SongCard({ song }) {
     const [songUrl, setSongUrl] = useState('');
     const [salePrice, setSalePrice] = useState(0);
     const [saleQuantity, setSaleQuantity] = useState(0);
+    const [saleStarted, setSaleStarted] = useState(false);
 
     const { config } = usePrepareContractWrite({
         address: SONGS_CONTRACT_ADDRESS,
@@ -67,7 +68,8 @@ export function SongCard({ song }) {
         address: SWAP_CONTRACT_ADDRESS,
         abi: SwapABI.abi,
         functionName: 'startSale',
-        onSuccess(bool) {
+        onSuccess() {
+            setSaleStarted(true);
             toast({
                 title: 'Song tokens listed correctly!',
                 status: 'success',
@@ -116,6 +118,7 @@ export function SongCard({ song }) {
         abi: SwapABI.abi,
         functionName: 'getSalePriceQuantity',
         args: [tokenId],
+        watch: true,
         onSuccess(data) {
             const _salePrice = data[0].toNumber();
             const _saleQuantity = data[1].toNumber();
@@ -126,6 +129,7 @@ export function SongCard({ song }) {
             setIsLoading(false);
         },
         onError(error) {
+            setIsLoading(false);
             setError(error);
         },
         watch: true
@@ -177,17 +181,17 @@ export function SongCard({ song }) {
                 <Text>
                     Tokens total supply: {totalSupply}
                 </Text>
-                {salePrice && saleQuantity && <>
+                {salePrice && saleQuantity ? <>
                     <Text>
                         Sale Price: {parseDecimal(salePrice)} USDC
                     </Text>
-                    <Text>
-                        Sale quantity: {saleQuantity}
-                    </Text>
-                </>}
-                <button className='primary-song' onClick={onOpen} >
-                    Sell song
-                </button>
+                </>
+                    : !saleStarted ?
+                        <button className='primary-button' onClick={onOpen} >
+                            Sell song
+                        </button>
+                        : <></>
+                }
                 <Modal isOpen={isOpen} onClose={onClose} >
                     <ModalOverlay
                         bg='#211f24'

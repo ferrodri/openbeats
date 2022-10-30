@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import * as React from 'react';
 import { useAccount } from '@web3modal/react';
-import { Account, Connect, UploadSong } from '../components';
+import { Account, Connect, AllSongs } from '../components';
 import { useIsMounted } from '../hooks';
 import { Container, Heading } from '@chakra-ui/react';
 
-function UploadSongPage() {
+function Songs() {
     const isMounted = useIsMounted();
     const { account: { isConnected, address } } = useAccount();
 
@@ -13,7 +13,7 @@ function UploadSongPage() {
         <div>
             <Head>
                 <title>OpenBeats</title>
-                <meta name="description" content="Upload your song" />
+                <meta name="description" content="All your favorite songs" />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
@@ -29,7 +29,7 @@ function UploadSongPage() {
                                 margin='0'
                                 paddingRight='45px'
                             >
-                                <UploadSong address={address} />
+                                <AllSongs address={address} />
                             </Container >
                         )
                         : <>
@@ -44,4 +44,4 @@ function UploadSongPage() {
     );
 }
 
-export default UploadSongPage;
+export default Songs;

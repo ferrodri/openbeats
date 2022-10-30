@@ -1,4 +1,5 @@
 export { Account } from './Account';
+export { AllSongs } from './AllSongs';
 export { Balance } from './Balance';
 export { Connect } from './Connect';
 export { FractionSong } from './FractionSong';

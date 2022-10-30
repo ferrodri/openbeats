@@ -11,7 +11,7 @@ const USDC_DECIMALS = 6;
 
 async function main() {
     // eslint-disable-next-line no-undef
-    const [{ address }] = await ethers.getSigners();
+    const [{ address }, { address: address2 }] = await ethers.getSigners();
 
     // Impersonate account to get some tokens
     // eslint-disable-next-line no-undef
@@ -30,6 +30,8 @@ async function main() {
     await USDCContract.approve(signer._address, ethers.utils.parseUnits('100.00', USDC_DECIMALS));
     // eslint-disable-next-line no-undef
     await USDCContract.transferFrom(signer._address, address, ethers.utils.parseUnits('100.00', USDC_DECIMALS));
+    // eslint-disable-next-line no-undef
+    await USDCContract.transferFrom(signer._address, address2, ethers.utils.parseUnits('100.00', USDC_DECIMALS));
 
     let balance = await USDCContract.balanceOf(address);
     // eslint-disable-next-line no-undef

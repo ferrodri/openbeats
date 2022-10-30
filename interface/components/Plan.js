@@ -5,10 +5,13 @@ import { useAccount } from '@web3modal/react';
 import ERC20ABI from '../shared/ERC20.json';
 import { USDC_CONTRACT_ADDRESS, USDC_DECIMALS } from '../shared/constants';
 import { ethers } from 'ethers';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 export function Plan({ plan }) {
     const { account: { address } } = useAccount();
     const { heading, img, price, hours } = plan;
+    const router = useRouter();
 
     const { write } = useContractWrite({
         mode: 'recklesslyUnprepared',
@@ -16,11 +19,14 @@ export function Plan({ plan }) {
         abi: ERC20ABI.abi,
         functionName: 'approve',
         onSuccess(bool) {
-            // TODO: set this onsuccess and onError, list songs
-            console.log('go', bool);
+            if (bool) {
+                router.push('/songs');
+            }
+            setIsLoading(false);
         },
         onError(error) {
-            console.log('no go', error);
+            setIsLoading(false);
+            setError(error);
         }
     });
 
