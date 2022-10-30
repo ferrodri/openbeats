@@ -7,31 +7,31 @@ const plans = [
         heading: 'Low',
         price: '2.00',
         hours: '10',
-        img: 'https://ipfs.io/ipfs/QmdbkXn12vg4v4JhCUExKDASU3qcMAwnDYAB1UpBVREhCh?filename=volume-control.png'
+        img: 'https://gateway.pinata.cloud/ipfs/QmdbkXn12vg4v4JhCUExKDASU3qcMAwnDYAB1UpBVREhCh'
     },
     {
         heading: 'Standard',
         price: '5.00',
         hours: '45',
-        img: 'https://ipfs.io/ipfs/QmVa93Yrm4NwCRP9Hj1dFzEd5cHcZWRPiFUvg4kkEFBBTr?filename=standard.png'
+        img: 'https://gateway.pinata.cloud/ipfs/QmVa93Yrm4NwCRP9Hj1dFzEd5cHcZWRPiFUvg4kkEFBBTr'
     },
     {
         heading: 'Fan',
         price: '9.00',
         hours: '100',
-        img: 'https://ipfs.io/ipfs/QmYs6e1QJ3RWSHyoLM9jtMdqEV4xpkZhfYcrrGyfxPGsRj?filename=fan%20(1).png'
+        img: 'https://gateway.pinata.cloud/ipfs/QmYs6e1QJ3RWSHyoLM9jtMdqEV4xpkZhfYcrrGyfxPGsRj'
     },
     {
         heading: 'Disco',
         price: '15.00',
         hours: '200',
-        img: 'https://ipfs.io/ipfs/QmcN8zyaR7vYEGSBu2yYU46EJaMYoTz7Rrvc6Xd44cEsfY?filename=disco.png'
+        img: 'https://gateway.pinata.cloud/ipfs/QmcN8zyaR7vYEGSBu2yYU46EJaMYoTz7Rrvc6Xd44cEsfY'
     },
     {
         heading: 'Star',
         price: '20.00',
         hours: '350',
-        img: 'https://ipfs.io/ipfs/QmXpCHhLmyVY2h15x46fr2tpAfn3cLnAEH9oA7ET8Nq39E?filename=star%20(1).png'
+        img: 'https://gateway.pinata.cloud/ipfs/QmXpCHhLmyVY2h15x46fr2tpAfn3cLnAEH9oA7ET8Nq39E'
     }
 ];
 

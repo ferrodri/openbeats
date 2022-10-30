@@ -25,8 +25,8 @@ function Home() {
                             isMounted && isConnected
                                 ? (<> <Account address={address} /> <Balance address={address}/></>)
                                 : <>
-                                    <Heading as='h1' size='l' padding='8px'>
-                                        OpenBeats
+                                    <Heading as='h1' size='l' padding='8px' fontSize='20px' color='#3542c6' font-fontWeight='900'>
+                                        Open<span style={{'color': 'white'}}>Beats</span>
                                     </Heading>
                                     <Connect />
                                 </>

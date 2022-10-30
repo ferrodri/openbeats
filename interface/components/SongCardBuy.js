@@ -159,18 +159,18 @@ export function SongCardBuy({ tokenId }) {
                 display='flex'
                 flexDirection='column'
             >
-                <Text>
-                    Song title: {title}
+                <Text color='#8b949e' fontWeight='bold'>
+                    <span style={{ 'color': 'white' }}>Song title: </span>{title}
                 </Text>
-                <Text>
-                    Song artist: {artist}
+                <Text color='#8b949e' fontWeight='bold'>
+                    <span style={{ 'color': 'white' }}>Song artist: </span>{artist}
                 </Text>
-                <Text>
-                    Song album: {album}
+                <Text color='#8b949e' fontWeight='bold'>
+                    <span style={{ 'color': 'white' }}>Song album: </span>{album}
                 </Text>
                 {salePrice && saleQuantity ? <>
-                    <Text>
-                        Sale Price: {parseDecimal(salePrice)} USDC
+                    <Text color='#8b949e' fontWeight='bold'>
+                        <span style={{ 'color': 'white' }}>Sale Price: </span>{parseDecimal(salePrice)} USDC
                     </Text>
                     <Modal isOpen={isOpen} onClose={onClose} >
                         <ModalOverlay

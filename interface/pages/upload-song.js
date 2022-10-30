@@ -18,26 +18,25 @@ function UploadSongPage() {
             </Head>
 
             <main>
-                <Account address={address} />
+                <Container display='flex' justifyContent='space-between' marginTop='16px'>
+                    <Heading as='h1' size='xl' padding='8px' fontSize='20px' color='#3542c6' font-fontWeight='900'>
+                        Open<span style={{ 'color': 'white' }}>Beats</span>
+                    </Heading>
+                    <Connect />
+                </Container>
                 {
-                    isMounted && isConnected
-                        ? (
-                            <Container
-                                display='flex'
-                                flexDirection='column'
-                                minWidth='1000px'
-                                margin='0'
-                                paddingRight='45px'
-                            >
-                                <UploadSong address={address} />
-                            </Container >
-                        )
-                        : <>
-                            <Heading as='h1' size='l' padding='8px'>
-                                OpenBeats
-                            </Heading>
-                            <Connect />
-                        </>
+                    isMounted && isConnected &&
+                    (
+                        <Container
+                            margin='0 auto'
+                            display='flex'
+                            flexDirection='column'
+                            minWidth='1000px'
+                            paddingRight='45px'
+                        >
+                            <UploadSong address={address} />
+                        </Container >
+                    )
                 }
             </main>
         </div>

@@ -58,7 +58,8 @@ export function AllSongs() {
             <Container display='flex' flexDirection='column'>
                 <Heading as='h1' size='xl' textAlign='center'>
                     GM Fren!
-                    <br></br>
+                </Heading>
+                <Heading as='h1' size='xl' color='#3542c6' textAlign='center'>
                     BD amigo!
                 </Heading>
                 {songs.map((_tokenId, i) =>
