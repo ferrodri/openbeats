@@ -4,8 +4,8 @@ import { ethers } from 'ethers';
 import { useAccount } from '@web3modal/react';
 import { Container, Heading } from '@chakra-ui/react';
 import { SongCardBuy } from './SongCardBuy';
-import SongsABI from '../../contracts/artifacts/contracts/Songs.sol/Songs.json';
-import { SONGS_CONTRACT_ADDRESS } from '../shared/constants';
+import SongABI from '../../contracts/artifacts/contracts/Song.sol/Song.json';
+import { SONG_CONTRACT_ADDRESS } from '../shared/constants';
 
 export function AllSongs() {
     const provider = useProvider();
@@ -17,10 +17,10 @@ export function AllSongs() {
 
     useEffect(() => {
         if (blockNumber, provider, address) {
-            const songsContract = new ethers.Contract(
-                SONGS_CONTRACT_ADDRESS, SongsABI.abi, provider
+            const songContract = new ethers.Contract(
+                SONG_CONTRACT_ADDRESS, SongABI.abi, provider
             );
-            let eventFilter = songsContract.filters.TransferSingle();
+            let eventFilter = songContract.filters.TransferSingle();
 
             provider.getLogs({
                 ...eventFilter,
@@ -29,7 +29,7 @@ export function AllSongs() {
             }).then(logs => {
 
                 const tokenIds = logs.map((log) => {
-                    const tokenId = songsContract.interface.parseLog(log).args[3].toNumber();
+                    const tokenId = songContract.interface.parseLog(log).args[3].toNumber();
                     return tokenId;
                 });
                 function onlyUnique(value, index, self) {

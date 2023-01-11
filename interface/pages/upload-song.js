@@ -19,7 +19,7 @@ function UploadSongPage() {
 
             <main>
                 <Container display='flex' justifyContent='space-between' marginTop='16px'>
-                    <Heading as='h1' size='xl' padding='8px' fontSize='20px' color='#3542c6' font-fontWeight='900'>
+                    <Heading as='h1' size='xl' padding='8px' fontSize='20px' color='#3542c6' fontWeight='900'>
                         Open<span style={{ 'color': 'white' }}>Beats</span>
                     </Heading>
                     <Connect />

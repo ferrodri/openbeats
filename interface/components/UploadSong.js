@@ -11,9 +11,8 @@ import { Field, Form, Formik } from 'formik';
 import { useContractWrite } from 'wagmi';
 import * as Yup from 'yup';
 import axios from 'axios';
-import SongsABI from '../../contracts/artifacts/contracts/Songs.sol/Songs.json';
-import { SONGS_CONTRACT_ADDRESS } from '../shared/constants';
-import { BigNumber } from 'ethers';
+import SongABI from '../../contracts/artifacts/contracts/Song.sol/Song.json';
+import { SONG_CONTRACT_ADDRESS } from '../shared/constants';
 import { PortfolioResume } from './PortfolioResume';
 
 const SongSchema = Yup.object().shape({
@@ -62,9 +61,9 @@ export function UploadSong({ address }) {
 
     const { write } = useContractWrite({
         mode: 'recklesslyUnprepared',
-        address: SONGS_CONTRACT_ADDRESS,
-        abi: SongsABI.abi,
-        functionName: 'mint',
+        address: SONG_CONTRACT_ADDRESS,
+        abi: SongABI.abi,
+        functionName: 'mintToken',
         onSuccess(data) {
             setTransactionHash(data.hash);
             toast({
@@ -116,7 +115,6 @@ export function UploadSong({ address }) {
                                 write({
                                     recklesslySetUnpreparedArgs: [
                                         address,
-                                        BigNumber.from(numberOfTokens),
                                         hash
                                     ]
                                 });
