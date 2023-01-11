@@ -5,4 +5,5 @@ export { Connect } from './Connect';
 export { FractionSong } from './FractionSong';
 export { Plan } from './Plan';
 export { PremiumPlans } from './PremiumPlans';
+export { SongBalance } from './SongBalance';
 export { UploadSong } from './UploadSong';

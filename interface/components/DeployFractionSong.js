@@ -70,7 +70,6 @@ export function DeployFractionSong({ tokensNumber, tokenId }) {
                             <SongCard tokenId={tokenId} />
                         </GridItem>
                         <GridItem>
-                            <TokensBalance />
                         </GridItem>
                     </Grid >
                 </>
